@@ -30,6 +30,7 @@ import com.auth.app.response.CommonUserResponse;
 import com.auth.app.service.AuthService;
 import com.auth.app.service.CustomUserDetailsService;
 import com.auth.app.service.UserService;
+import com.auth.app.util.Util;
 
 import java.util.Optional;
 import java.util.Set;
@@ -50,10 +51,10 @@ public class UserController {
 
     private final ApplicationEventPublisher applicationEventPublisher;
     private final CustomUserDetailsService customuserService;
-
+    
     @Autowired
     public UserController(AuthService authService, UserService userService, ApplicationEventPublisher applicationEventPublisher,CustomUserDetailsService userservice) {
-        this.authService = authService;
+		this.authService = authService;
         this.userService = userService;
         this.applicationEventPublisher = applicationEventPublisher;
         this.customuserService=userservice;
@@ -85,7 +86,8 @@ public class UserController {
     @ApiOperation(value = "Logs the specified user device and clears the refresh tokens associated with it")
     public ResponseEntity logoutUser(@ApiParam(value = "The LogOutRequest payload") @Valid @RequestBody(required = true) LogOutRequest logOutRequest,
     		@RequestHeader(value = "Authorization",required = true) String token) {
-        userService.logoutUser(logOutRequest);
+    	userService.logoutUser(logOutRequest);
+        
         return ResponseEntity.ok(new ApiResponse(true, "Log out successful"));
     }
     @GetMapping("/getuserinfo")

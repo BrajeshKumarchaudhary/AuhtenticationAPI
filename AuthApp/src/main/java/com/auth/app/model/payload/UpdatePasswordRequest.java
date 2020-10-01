@@ -2,9 +2,15 @@ package com.auth.app.model.payload;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @ApiModel(value = "Update password Request", description = "The update password request payload")
 public class UpdatePasswordRequest {
 
@@ -16,37 +22,4 @@ public class UpdatePasswordRequest {
     @ApiModelProperty(value = "Valid new password string", required = true, allowableValues = "NonEmpty String")
     private String newPassword;
     private String emailId;
-    
-
-    public String getEmailId() {
-		return emailId;
-	}
-
-	public void setEmailId(String emailId) {
-		this.emailId = emailId;
-	}
-
-	public UpdatePasswordRequest(String oldPassword, String newPassword) {
-        this.oldPassword = oldPassword;
-        this.newPassword = newPassword;
-    }
-
-    public UpdatePasswordRequest() {
-    }
-
-    public String getOldPassword() {
-        return oldPassword;
-    }
-
-    public void setOldPassword(String oldPassword) {
-        this.oldPassword = oldPassword;
-    }
-
-    public String getNewPassword() {
-        return newPassword;
-    }
-
-    public void setNewPassword(String newPassword) {
-        this.newPassword = newPassword;
-    }
 }

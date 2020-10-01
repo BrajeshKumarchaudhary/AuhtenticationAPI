@@ -2,12 +2,18 @@ package com.auth.app.model.payload;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import com.auth.app.validation.annotation.NullOrNotBlank;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @ApiModel(value = "Login Request", description = "The login request payload")
 public class LoginRequest {
 
@@ -22,52 +28,14 @@ public class LoginRequest {
     @NotNull(message = "Login password cannot be blank")
     @ApiModelProperty(value = "Valid user password", required = true, allowableValues = "NonEmpty String")
     private String password;
+    
+    @NotNull(message = "Login on multiDevice")
+    @ApiModelProperty(value = "allow login on multpleDevice", required = true, allowableValues = "true/false")
+    private boolean loginAllowMultipleDevice;
 
     @Valid
     @NotNull(message = "Device info cannot be null")
     @ApiModelProperty(value = "Device info", required = true, dataType = "object", allowableValues = "A valid " +
             "deviceInfo object")
     private DeviceInfo deviceInfo;
-
-    public LoginRequest(String username, String email, String password, DeviceInfo deviceInfo) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.deviceInfo = deviceInfo;
-    }
-
-    public LoginRequest() {
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public DeviceInfo getDeviceInfo() {
-        return deviceInfo;
-    }
-
-    public void setDeviceInfo(DeviceInfo deviceInfo) {
-        this.deviceInfo = deviceInfo;
-    }
 }

@@ -18,6 +18,7 @@ import com.auth.app.model.CustomUserDetails;
 import com.auth.app.model.PasswordResetToken;
 import com.auth.app.model.User;
 import com.auth.app.model.UserDevice;
+import com.auth.app.model.payload.LogOutRequest;
 import com.auth.app.model.payload.LoginRequest;
 import com.auth.app.model.payload.PasswordResetLinkRequest;
 import com.auth.app.model.payload.PasswordResetRequest;
@@ -28,6 +29,7 @@ import com.auth.app.model.token.EmailVerificationToken;
 import com.auth.app.model.token.RefreshToken;
 import com.auth.app.security.JwtTokenProvider;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -157,6 +159,11 @@ public class AuthService {
         }
         String newPassword = passwordEncoder.encode(updatePasswordRequest.getNewPassword());
         currentUser.setPassword(newPassword);
+        //logout on all Devices.
+        LogOutRequest logoutResquest=new LogOutRequest();
+    	logoutResquest.setUserId(currentUser.getId());
+    	logoutResquest.setLogoutAllDevice(true);
+    	userService.logoutUser(logoutResquest);
         userService.save(currentUser);
         return Optional.of(currentUser);
     }
@@ -183,11 +190,14 @@ public class AuthService {
      */
     public Optional<RefreshToken> createAndPersistRefreshTokenForDevice(Authentication authentication, LoginRequest loginRequest) {
         User currentUser = (User) authentication.getPrincipal();
-        userDeviceService.findByUserId(currentUser.getId())
-                .map(UserDevice::getRefreshToken)
-                .map(RefreshToken::getId)
-                .ifPresent(refreshTokenService::deleteById);
-
+        //this is for single device login
+        if(!loginRequest.isLoginAllowMultipleDevice()) {
+        	List<UserDevice> allUserID=userDeviceService.findByUserId(currentUser.getId());
+        	allUserID.stream().forEach(userDevice->{
+                refreshTokenService.deleteById(userDevice.getRefreshToken().getId());
+        	});                
+        }
+        
         UserDevice userDevice = userDeviceService.createUserDevice(loginRequest.getDeviceInfo());
         RefreshToken refreshToken = refreshTokenService.createRefreshToken();
         userDevice.setUser(currentUser);
@@ -248,6 +258,11 @@ public class AuthService {
         return Optional.of(passwordResetToken)
                 .map(PasswordResetToken::getUser)
                 .map(user -> {
+                	//logout on all device.
+                	LogOutRequest logoutResquest=new LogOutRequest();
+                	logoutResquest.setUserId(user.getId());
+                	logoutResquest.setLogoutAllDevice(true);
+                	userService.logoutUser(logoutResquest);
                     user.setPassword(encodedPassword);
                     userService.save(user);
                     return user;

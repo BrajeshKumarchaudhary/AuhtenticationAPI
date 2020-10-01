@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import com.auth.app.model.Mail;
+import com.auth.app.util.ConfigurableConstant;
 import com.auth.app.util.Util;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -60,7 +61,7 @@ public class MailService {
             throws IOException, TemplateException, MessagingException {
         try {
     	Mail mail = new Mail();
-        mail.setSubject("Email Verification [Team CEP]");
+        mail.setSubject(ConfigurableConstant.REGISTARTION_EMAIL_VERIFICATION_SUBJECT);
         mail.setTo(to);
         mail.getModel().put("userName", to);
         mail.getModel().put("userEmailTokenVerificationLink", emailVerificationUrl);
@@ -83,7 +84,7 @@ public class MailService {
         Long expirationInMinutes = TimeUnit.MILLISECONDS.toMinutes(expiration);
         String expirationInMinutesString = expirationInMinutes.toString();
         Mail mail = new Mail();
-        mail.setSubject("Password Reset Link [Team CEP]");
+        mail.setSubject(ConfigurableConstant.PASSWORD_RESET_LINK_SUBJECT);
         mail.setTo(to);
         mail.getModel().put("userName", to);
         mail.getModel().put("userResetPasswordLink", resetPasswordLink);
@@ -103,7 +104,7 @@ public class MailService {
     public void sendAccountChangeEmail(String action, String actionStatus, String to)
             throws IOException, TemplateException, MessagingException {
         Mail mail = new Mail();
-        mail.setSubject("Account Status Change [Team CEP]");
+        mail.setSubject(ConfigurableConstant.USER_ACTIVITY_SUBJECT);
         mail.setTo(to);
         mail.getModel().put("userName", to);
         mail.getModel().put("action", action);

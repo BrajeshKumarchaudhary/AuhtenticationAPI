@@ -2,10 +2,16 @@ package com.auth.app.model.payload;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @ApiModel(value = "Logout request", description = "The logout request payload")
 public class LogOutRequest {
 
@@ -15,28 +21,5 @@ public class LogOutRequest {
             "deviceInfo object")
     private DeviceInfo deviceInfo;
     private long userId;
-    
-    
-    public long getUserId() {
-		return userId;
-	}
-
-	public void setUserId(long userId) {
-		this.userId = userId;
-	}
-
-	public LogOutRequest() {
-    }
-
-    public LogOutRequest(DeviceInfo deviceInfo) {
-        this.deviceInfo = deviceInfo;
-    }
-
-    public DeviceInfo getDeviceInfo() {
-        return deviceInfo;
-    }
-
-    public void setDeviceInfo(DeviceInfo deviceInfo) {
-        this.deviceInfo = deviceInfo;
-    }
+    private boolean logoutAllDevice;
 }

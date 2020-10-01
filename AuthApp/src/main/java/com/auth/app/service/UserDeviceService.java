@@ -5,11 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.auth.app.exception.TokenRefreshException;
+import com.auth.app.model.User;
 import com.auth.app.model.UserDevice;
 import com.auth.app.model.payload.DeviceInfo;
 import com.auth.app.model.token.RefreshToken;
 import com.auth.app.repository.UserDeviceRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,7 +27,7 @@ public class UserDeviceService {
     /**
      * Find the user device info by user id
      */
-    public Optional<UserDevice> findByUserId(Long userId) {
+    public List<UserDevice> findByUserId(Long userId) {
         return userDeviceRepository.findByUserId(userId);
     }
 
@@ -60,4 +62,8 @@ public class UserDeviceService {
             throw new TokenRefreshException(refreshToken.getToken(), "Refresh blocked for the device. Please login through a different device");
         }
     }
+
+	public Optional<UserDevice> findByDeviceId(String deviceId) {
+		return userDeviceRepository.findByDeviceId(deviceId);
+	}
 }

@@ -32,9 +32,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
             Throwable throwable = (Throwable) request.getAttribute("javax.servlet.error.exception");
             resolver.resolveException(request, httpServletResponse, null, (Exception) throwable);
         }
-        ex.printStackTrace();
-        System.out.println(ex.getLocalizedMessage());
-        System.out.println("Cause--"+ex.getCause());
         httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage());
     }
 }

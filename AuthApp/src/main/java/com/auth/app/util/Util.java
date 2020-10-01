@@ -37,6 +37,10 @@ public class Util {
 	public  Map<String,String> getMailProp(){
 		return this.getInputData().stream().collect(Collectors.toMap(InputData::getDataKey, InputData::getDataValue));
 	}
+	public String getDataByKey(String key) {
+		return this.getMailProp().get(key);
+	}
+	
 	public  void updateTokenExpire(String tokenExpires, String key) {
                    this.inputrepo.updateTokenExpire(tokenExpires, key);    		
 	}

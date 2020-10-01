@@ -2,11 +2,17 @@ package com.auth.app.model.payload;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 
 import com.auth.app.validation.annotation.NullOrNotBlank;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @ApiModel(value = "Registration Request", description = "The registration request payload")
 public class RegistrationRequest {
 
@@ -33,74 +39,5 @@ public class RegistrationRequest {
 
     @NullOrNotBlank(message = "Registration username can be null but not blank")
     @ApiModelProperty(value = "A valid lastname",required = false, allowableValues = "NonEmpty String")
-    private String lasttname;
-
-    
-    
-    
-    
-    public RegistrationRequest(String username, String email,
-			@NotNull(message = "Registration password cannot be null") String password,
-			@NotNull(message = "Specify whether the user has to be registered as an admin or not") Boolean registerAsAdmin,
-			String firstname, String lasttname) {
-		super();
-		this.username = username;
-		this.email = email;
-		this.password = password;
-		this.registerAsAdmin = registerAsAdmin;
-		this.firstname = firstname;
-		this.lasttname = lasttname;
-	}
-
-    public RegistrationRequest() {
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Boolean getRegisterAsAdmin() {
-        return registerAsAdmin;
-    }
-
-    public void setRegisterAsAdmin(Boolean registerAsAdmin) {
-        this.registerAsAdmin = registerAsAdmin;
-    }
-
-	public String getFirstname() {
-		return firstname;
-	}
-
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
-	}
-
-	public String getLasttname() {
-		return lasttname;
-	}
-
-	public void setLasttname(String lasttname) {
-		this.lasttname = lasttname;
-	}
-    
+    private String lasttname;    
 }

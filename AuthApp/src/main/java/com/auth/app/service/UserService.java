@@ -17,6 +17,7 @@ import com.auth.app.model.payload.RegistrationRequest;
 import com.auth.app.repository.UserRepository;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -118,12 +119,31 @@ public class UserService {
      * id is found matching the database for the given user, throw a log out exception.
      */
     public void logoutUser(LogOutRequest logOutRequest) {
-        String deviceId = logOutRequest.getDeviceInfo().getDeviceId();
-        UserDevice userDevice = userDeviceService.findByUserId(logOutRequest.getUserId())
-                .filter(device -> device.getDeviceId().equals(deviceId))
-                .orElseThrow(() -> new UserLogoutException(logOutRequest.getDeviceInfo().getDeviceId(), "Invalid device Id supplied. No matching device found for the given user "));
-
-        logger.info("Removing refresh token associated with device [" + userDevice + "]");
-        refreshTokenService.deleteById(userDevice.getRefreshToken().getId());
+        
+        UserDevice userDevice=null;
+        if(logOutRequest.isLogoutAllDevice()) {
+        	//tofo here for multi device logout.
+    	   List<UserDevice> alluserDevice = userDeviceService.findByUserId(logOutRequest.getUserId());
+    	   if(alluserDevice.size()==0||alluserDevice.isEmpty()) {
+                  new UserLogoutException(logOutRequest.getDeviceInfo().getDeviceId(), "User login into any Device please login again then logout");
+    	   }
+    	   else {
+    		   alluserDevice.forEach(userdevice->{
+    			   logger.info("Removing refresh token associated with device [" + userdevice + "]");
+    	        	refreshTokenService.deleteById(userdevice.getRefreshToken().getId());	   
+    		   });
+    	   }
+        }else {
+        	//todo Single Device logout
+        	    String deviceId = logOutRequest.getDeviceInfo().getDeviceId();
+        	    userDevice = userDeviceService.findByDeviceId(deviceId)
+                     .filter(device -> device.getDeviceId().equals(deviceId))
+                     .orElseThrow(() -> new UserLogoutException(logOutRequest.getDeviceInfo().getDeviceId(), "User login into another Device please login again then logout"));
+        	    logger.info("Removing refresh token associated with device [" + userDevice + "]");
+            	refreshTokenService.deleteById(userDevice.getRefreshToken().getId());	
+        }
+        
+           
+       
     }
 }
